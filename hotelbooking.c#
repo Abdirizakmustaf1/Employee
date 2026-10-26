@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
+
+namespace hotel_boking
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btncalculate_Click(object sender, EventArgs e)
+        {
+            string name = txtName.Text.Trim();
+            int age, nights, guests;
+
+            if (name == "")
+            {
+                MessageBox.Show("Guest name cannot be empty.");
+                return;
+            }
+            if (!int.TryParse(txtAge.Text, out age) ||
+               !int.TryParse(txtNighs.Text, out nights) ||
+               !int.TryParse(txtgusst.Text, out guests))
+            {
+                MessageBox.Show("Please enter valid numbers.");
+                return;
+            }
+            if (age < 15 || age > 100)
+            {
+                MessageBox.Show("Age must be between 15 and 100.");
+                return;
+            }
+
+            if (nights < 1 || nights > 30)
+            {
+                MessageBox.Show("Nights must be between 1 and 30.");
+                return;
+            }
+
+            if (guests < 1 || guests > 8)
+            {
+                MessageBox.Show("Guests must be between 1 and 8.");
+                return;
+            }
+            string roomType;
+            double rate;
+            int maxGuests;
+            if (chekstandr.Checked)
+            {
+                roomType = "Standard";
+                rate = 50;
+                maxGuests = 3;
+            }
+            else if (cheknormal.Checked)
+            {
+                roomType = "Normal";
+                rate = 80;
+                maxGuests = 6;
+            }
+            else if (chekhight.Checked)
+            {
+                roomType = "High";
+                rate = 130;
+                maxGuests = 8;
+            }
+            else
+            {
+                MessageBox.Show("Please select a room type.");
+                return;
+            }
+            bool approved = true;
+
+            if (guests > maxGuests)
+                approved = false;
+
+            if (!approved)
+            {
+                MessageBox.Show("Booking rejected for this room.");
+                detalis.Text = "Booking Status: Rejected";
+                return;
+            }
+            double basicCost = rate * nights;
+
+            double discountRate = 0;
+
+            if (nights >= 10)
+                discountRate = 0.12;
+            else if (nights >= 5)
+                discountRate = 0.05;
+            double discount = basicCost * discountRate;
+
+            double seniorDiscount = 0;
+
+            if (age >= 60)
+                seniorDiscount = basicCost * 0.05;
+
+            double breakfastCost = 0;
+
+            if (chkBreakfast.Checked)
+                breakfastCost = 10 * guests * nights;
+
+            double subtotal = basicCost - discount
+                              - seniorDiscount + breakfastCost;
+
+            double serviceCharge = 0;
+
+            if (guests > 4)
+                serviceCharge = subtotal * 0.05;
+
+            double finalCost = subtotal + serviceCharge;
+
+        }
+    }
+
+    }
+
